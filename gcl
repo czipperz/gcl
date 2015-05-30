@@ -1,0 +1,3 @@
+#!/bin/bash
+_gitCloneDir=$(cat $HOME/.config/gcl)
+git clone ${_gitCloneDir}$@
