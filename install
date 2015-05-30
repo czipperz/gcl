@@ -1,4 +1,4 @@
 #!/bin/bash
 mkdir -p $HOME/.config
-echo 'https://github.com/czipperz/' > $HOME/.config/glc
+echo 'https://github.com/czipperz/' > $HOME/.config/gcl
 sudo cp gcl /bin
