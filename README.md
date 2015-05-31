@@ -4,8 +4,8 @@ Clones from YOUR git repository. Reads a string from `$HOME/.config/gcl` and put
 
 Example gcl file:
 
-	https://github.com/czipperz/
+	https://github.com/
 
 Then you can run
 
-	$ gcl asert   # Same as `git clone https://github.com/czipperz/asert`
+	$ gcl czipperz/asert   # Same as `git clone https://github.com/czipperz/asert`
