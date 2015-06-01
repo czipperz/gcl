@@ -1,6 +1,6 @@
 #!/bin/bash
 mkdir -p $HOME/.config
-echo 'https://github.com/' > $HOME/.config/gcl
+[ -e $HOME/.config/gr ] || echo 'https://github.com/' > $HOME/.config/gcl
 if [ -s /bin/zsh ]; then
 	sudo cp gcl.zsh /bin/gcl
 else
