@@ -1,3 +1,10 @@
 #!/bin/bash
-_gitCloneDir=$(cat $HOME/.config/gcl)
-git clone ${_gitCloneDir}$@
+if (( $# < 1 )); then
+	echo "Needs at least one argument"
+	exit 1
+fi
+if [ 1 -eq $(echo "$1" | egrep -c "^(http(s)?|git)://*") ]; then
+	git clone $@
+	exit 0
+fi
+git clone $(cat $HOME/.config/gcl)$@
