@@ -2,7 +2,7 @@
 mkdir -p $HOME/.config
 printf "Input your github username (or leave it blank if you don't have one): "
 read -r
-if [ -f "$HOME/.config/gr" ]; then
+if [ -f "$HOME/.config/gcl" ]; then
 	if [ -z "$REPLY" ]; then
 		echo "https://github.com/" > $HOME/.config/gcl
 	else
