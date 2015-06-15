@@ -1,4 +1,12 @@
 #!/bin/bash
 mkdir -p $HOME/.config
-[ -e $HOME/.config/gr ] || (echo 'https://github.com/' > $HOME/.config/gcl)
+printf "Input your github username (or leave it blank if you don't have one): "
+read -r
+if [ -f "$HOME/.config/gr" ]; then
+	if [ -z "$REPLY" ]; then
+		echo "https://github.com/" > $HOME/.config/gcl
+	else
+		echo "https://$REPLY@github.com/" > $HOME/.config/gcl
+	fi
+fi
 sudo cp gcl /bin

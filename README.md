@@ -4,7 +4,7 @@ Clones from YOUR git repository. Reads a string from `$HOME/.config/gcl` and put
 
 Example gcl file:
 
-	https://github.com/
+	https://czipperz@github.com/
 
 Then you can run
 
