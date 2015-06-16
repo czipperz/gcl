@@ -8,4 +8,12 @@ Example gcl file:
 
 Then you can run
 
-	$ gcl czipperz/asert   # Same as `git clone https://github.com/czipperz/asert`
+	$ gcl czipperz/asert   # Same as `git clone https://czipperz@github.com/czipperz/asert`
+
+You can also put a prefix (seperated from the url by a colon) such as:
+
+	bb:https://czipperz@bitbucket.org/
+
+Then you can run
+
+	$ gcl bb:czipperz/asert   # Same as `git clone https://czipperz@bitbucket.org/czipperz/asert`
