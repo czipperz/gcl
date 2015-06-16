@@ -5,6 +5,21 @@ if (( $# < 1 )); then
 fi
 if [ 1 -eq $(echo "$1" | egrep -c "^(http(s)?|git)://*") ]; then
 	git clone $@
-	exit 0
+elif [ 1 -eq $(echo "$1" | egrep -c "^[^:]+:.+") ]; then
+	nnnn="$(echo "$1" | perl -pe 's/([^:]+:).+/$1/')"
+	nn="$(cat $HOME/.config/gcl | wc -l)"
+	in=2
+	while (( $in <= $nn )); do
+		hi="$(head -n $in $HOME/.config/gcl | tail -n 1)"
+		if [ 1 -eq $(echo "$hi" | egrep -c "^$nnnn") ]; then
+			xD="$(echo "$1" | perl -pe 's/[^:]+:(.+)/$1/')"
+			shift
+			git clone $(echo "$hi" | perl -pe 's/[^:]+:(.+)/$1/')$xD
+			exit 0
+		fi
+		(( in++ ))
+	done
+	echo "Couldn't find provider $(echo "$nnnn" | perl -pe 's/:$//')"
+else
+	git clone $(head -n 1 $HOME/.config/gcl)$@
 fi
-git clone $(cat $HOME/.config/gcl)$@
