@@ -14,7 +14,7 @@ elif [ 1 -eq $(echo "$1" | egrep -c "^[^:]+:.+") ]; then
 		if [ 1 -eq $(echo "$hi" | egrep -c "^$nnnn") ]; then
 			xD="$(echo "$1" | perl -pe 's/[^:]+:(.+)/$1/')"
 			shift
-			git clone $(echo "$hi" | perl -pe 's/[^:]+:(.+)/$1/')$xD
+			git clone $(echo "$hi" | perl -pe 's/[^:]+:(.+)/$1/')$xD $@
 			exit 0
 		fi
 		(( in++ ))
