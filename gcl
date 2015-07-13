@@ -3,7 +3,7 @@ if (( $# < 1 )); then
 	echo "Needs at least one argument"
 	exit 1
 fi
-if [ 1 -eq $(echo "$1" | egrep -c "^(http(s)?|git)://*") ]; then
+if [ 1 -eq $(echo "$1" | egrep -c "^(http(s)?|git|ssh)://*") ]; then
 	git clone $@
 elif [ 1 -eq $(echo "$1" | egrep -c "^[^:]+:.+") ]; then
 	nnnn="$(echo "$1" | perl -pe 's/([^:]+:).+/$1/')"
