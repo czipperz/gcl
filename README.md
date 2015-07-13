@@ -1,6 +1,6 @@
 #GCL
 
-Clones from YOUR git repository. Reads a string from `$HOME/.config/gcl` and puts it before the git clone string.
+Clones from YOUR git repository. Reads a string from `$HOME/.config/git-providers` and puts it before the git clone string.
 
 Examples:
 
