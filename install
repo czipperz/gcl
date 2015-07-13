@@ -1,6 +1,6 @@
 #!/bin/bash
 mkdir -p $HOME/.config
-if [ ! -f "$HOME/.config/gcl" ]; then
+if [ ! -f "$HOME/.config/git-providers" ]; then
 	printf "Input your github username (or leave it blank if you don't have one): "
 	read -r
 	if [ -z "$REPLY" ]; then
