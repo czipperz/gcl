@@ -8,16 +8,16 @@ if [ 1 -eq $(echo "$1" | egrep -c "^(http(s)?|git|ssh)://*") ]; then
 elif [ 1 -eq $(echo "$1" | egrep -c "^[^:]+:.+") ]; then
     nnnn="$(echo "$1" | perl -pe 's/([^:]+:).+/$1/')"
     nn="$(cat $HOME/.config/git-providers | wc -l)"
-    in=2
-    while (( $in <= $nn )); do
-	hi="$(head -n $in $HOME/.config/git-providers | tail -n 1)"
+    i=2
+    while (( $i <= $nn )); do
+	hi="$(head -n $i $HOME/.config/git-providers | tail -n 1)"
 	if [ 1 -eq $(echo "$hi" | egrep -c "^$nnnn") ]; then
 	    xD="$(echo "$1" | perl -pe 's/[^:]+:(.+)/$1/')"
 	    shift
 	    git clone $(echo "$hi" | perl -pe 's/[^:]+:(.+)/$1/')$xD $@
 	    exit 0
 	fi
-	(( in++ ))
+	(( i++ ))
     done
     echo "Couldn't find provider $(echo "$nnnn" | perl -pe 's/:$//')"
 else
