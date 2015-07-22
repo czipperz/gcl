@@ -9,13 +9,13 @@ elif [ 1 -eq $(echo "$1" | egrep -c "^[^:]+:.+") ]; then
     nnnn="$(echo "$1" | perl -pe 's/([^:]+:).+/$1/')"
     nn="$(cat $HOME/.config/git-providers | wc -l)"
     for (( i=2; i <= $nn; i++ )); do
-	hi="$(head -n $i $HOME/.config/git-providers | tail -n 1)"
-	if [ 1 -eq $(echo "$hi" | egrep -c "^$nnnn") ]; then
-	    xD="$(echo "$1" | perl -pe 's/[^:]+:(.+)/$1/')"
-	    shift
-	    git clone $(echo "$hi" | perl -pe 's/[^:]+:(.+)/$1/')$xD $@
-	    exit 0
-	fi
+        hi="$(head -n $i $HOME/.config/git-providers | tail -n 1)"
+        if [ 1 -eq $(echo "$hi" | egrep -c "^$nnnn") ]; then
+            xD="$(echo "$1" | perl -pe 's/[^:]+:(.+)/$1/')"
+            shift
+            git clone $(echo "$hi" | perl -pe 's/[^:]+:(.+)/$1/')$xD $@
+            exit 0
+        fi
     done
     echo "Couldn't find provider $(echo "$nnnn" | perl -pe 's/:$//')"
 else
