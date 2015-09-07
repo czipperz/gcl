@@ -16,7 +16,7 @@ if [ $# -eq 0 -o "$1" = '--help' ]; then
 fi
 
 if [ 1 -eq $(echo "$1" | egrep -c "^(http(s)?|git|ssh)://*") ]; then
-    git clone $@
+    git clone $@ || exit $?
 elif [ 1 -eq $(echo "$1" | egrep -c "^[^:]+:.+") ]; then
     nnnn="$(echo "$1" | perl -pe 's/([^:]+:).+/$1/')"
     nn="$(cat $HOME/.config/git-providers | wc -l)"
@@ -25,11 +25,12 @@ elif [ 1 -eq $(echo "$1" | egrep -c "^[^:]+:.+") ]; then
         if [ 1 -eq $(echo "$hi" | egrep -c "^$nnnn") ]; then
             xD="$(echo "$1" | perl -pe 's/[^:]+:(.+)/$1/')"
             shift
-            git clone $(echo "$hi" | perl -pe 's/[^:]+:(.+)/$1/')$xD $@
+            git clone $(echo "$hi" | perl -pe 's/[^:]+:(.+)/$1/')$xD $@ \
+                || exit $?
             exit 0
         fi
     done
     echo "Couldn't find provider $(echo "$nnnn" | perl -pe 's/:$//')"
 else
-    git clone $(head -n 1 $HOME/.config/git-providers)$@
+    git clone $(head -n 1 $HOME/.config/git-providers)$@ || exit $?
 fi
