@@ -1,12 +1,12 @@
 #!/bin/bash
-mkdir -p $HOME/.config
+mkdir -p "$HOME/.config"
 if [ ! -f "$HOME/.config/git-providers" ]; then
 	printf "Input your github username (or leave it blank if you don't have one): "
 	read -r
 	if [ -z "$REPLY" ]; then
-		echo "https://github.com/" > $HOME/.config/gcl
+		echo "https://github.com/" > "$HOME/.config/gcl"
 	else
-		echo "https://$REPLY@github.com/" > $HOME/.config/gcl
+		echo "https://$REPLY@github.com/" > "$HOME/.config/gcl"
 	fi
 fi
 sudo cp gcl /bin
