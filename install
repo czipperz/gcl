@@ -4,7 +4,7 @@ if [ ! -f "$HOME/.config/git-providers" ]; then
 	printf "Input your github username (or leave it blank if you don't have one): "
 	read -r
 	if [ -z "$REPLY" ]; then
-		echo "https://github.com/" > "$HOME/.config/gcl"
+		echo "https://github.com/" > "$HOME/.config/git-providers"
 	else
 		echo "https://$REPLY@github.com/" > "$HOME/.config/gcl"
 	fi
