@@ -26,45 +26,49 @@ clone() {
     fi
 }
 
-if [ $# -eq 0 -o "$1" = '--help' ]; then
-    echo "GCL: the \`git clone\` that doesn't suck"
-    echo
-    echo 'Usage:'
-    echo
-    echo '$ cat ~/.config/git-providers'
-    echo 'https://github.com/'
-    echo 'c:https://czipperz@github.com/czipperz/'
-    echo
-    echo '$ gcl c:gcl   # clones gcl for you!'
-    echo '...'
-    echo '$ gcl robbyrussell/oh-my-zsh   # clones `oh-my-zsh` for you!'
-    echo '...'
-    exit 1
-fi
+main() {
+    if [ $# -eq 0 -o "$1" = '--help' ]; then
+        echo "GCL: the \`git clone\` that doesn't suck"
+        echo
+        echo 'Usage:'
+        echo
+        echo '$ cat ~/.config/git-providers'
+        echo 'https://github.com/'
+        echo 'c:https://czipperz@github.com/czipperz/'
+        echo
+        echo '$ gcl c:gcl   # clones gcl for you!'
+        echo '...'
+        echo '$ gcl robbyrussell/oh-my-zsh   # clones `oh-my-zsh` for you!'
+        echo '...'
+        exit 1
+    fi
 
-if [ 1 -eq $(echo "$1" | grep -c -E -m 1 "^(http(s)?|git|ssh)://*") ]; then
-    local repo="$(echo "$1" | perl -pe 's/(\.git)?$/.git/')"
-    shift
-    clone "$repo" "$@"
-elif [ 1 -eq $(echo "$1" | grep -c -E -m 1 "^[^:]+:.+") ]; then
-    local nnnn="$(echo "$1" | perl -pe 's/([^:]+:).+/$1/')"
-    local nn="$(cat "$HOME/.config/git-providers" | wc -l)"
-    local hi xD
-    # for line in git-providers that isn't first
-    for (( i=2; i <= $nn; i++ )); do
-        hi="$(head -n $i "$HOME/.config/git-providers" | tail -n 1)"
-        if [ 1 -eq $(echo "$hi" | grep -c -E -m 1 "^$nnnn") ]; then
-            xD="$(echo "$1" | perl -pe 's/[^:]+:(.+)/$1/')"
-            shift
-            clone "$(echo "$hi" | perl -pe 's/[^:]+:(.+)/$1/')$xD" "$@"
-            exit 0
-        fi
-    done
-    echo "Couldn't find provider $(echo "$nnnn" | perl -pe 's/:$//')"
-    exit 1
-else
-    local repo="$1"
-    local prefix="$(head -n 1 "$HOME/.config/git-providers")"
-    shift
-    clone "$prefix$repo" "$@"
-fi
+    if [ 1 -eq $(echo "$1" | grep -c -E -m 1 "^(http(s)?|git|ssh)://*") ]; then
+        local repo="$(echo "$1" | perl -pe 's/(\.git)?$/.git/')"
+        shift
+        clone "$repo" "$@"
+    elif [ 1 -eq $(echo "$1" | grep -c -E -m 1 "^[^:]+:.+") ]; then
+        local nnnn="$(echo "$1" | perl -pe 's/([^:]+:).+/$1/')"
+        local nn="$(cat "$HOME/.config/git-providers" | wc -l)"
+        local hi xD
+        # for line in git-providers that isn't first
+        for (( i=2; i <= $nn; i++ )); do
+            hi="$(head -n $i "$HOME/.config/git-providers" | tail -n 1)"
+            if [ 1 -eq $(echo "$hi" | grep -c -E -m 1 "^$nnnn") ]; then
+                xD="$(echo "$1" | perl -pe 's/[^:]+:(.+)/$1/')"
+                shift
+                clone "$(echo "$hi" | perl -pe 's/[^:]+:(.+)/$1/')$xD" "$@"
+                exit 0
+            fi
+        done
+        echo "Couldn't find provider $(echo "$nnnn" | perl -pe 's/:$//')"
+        exit 1
+    else
+        local repo="$1"
+        local prefix="$(head -n 1 "$HOME/.config/git-providers")"
+        shift
+        clone "$prefix$repo" "$@"
+    fi
+}
+
+main "$@"
