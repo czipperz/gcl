@@ -15,18 +15,18 @@ if [ $# -eq 0 -o "$1" = '--help' ]; then
     exit 1
 fi
 
-if [ 1 -eq $(echo "$1" | egrep -c "^(http(s)?|git|ssh)://*") ]; then
+if [ 1 -eq $(echo "$1" | grep -c -E -m 1 "^(http(s)?|git|ssh)://*") ]; then
     local repo="$(echo "$1" | perl -pe 's/(\.git)?$/.git/')"
     shift
     git clone "$repo" "$@" || exit $?
-elif [ 1 -eq $(echo "$1" | egrep -c "^[^:]+:.+") ]; then
+elif [ 1 -eq $(echo "$1" | grep -c -E -m 1 "^[^:]+:.+") ]; then
     local nnnn="$(echo "$1" | perl -pe 's/([^:]+:).+/$1/')"
     local nn="$(cat "$HOME/.config/git-providers" | wc -l)"
     local hi xD
     # for line in git-providers that isn't first
     for (( i=2; i <= $nn; i++ )); do
         hi="$(head -n $i "$HOME/.config/git-providers" | tail -n 1)"
-        if [ 1 -eq $(echo "$hi" | egrep -c "^$nnnn") ]; then
+        if [ 1 -eq $(echo "$hi" | grep -c -E -m 1 "^$nnnn") ]; then
             xD="$(echo "$1" | perl -pe 's/[^:]+:(.+)/$1/')"
             shift
             git clone "$(echo "$hi" | perl -pe 's/[^:]+:(.+)/$1/')$xD"\
