@@ -1,4 +1,31 @@
 #!/bin/bash
+clone() {
+    local tempfile="$(mktemp gcl.XXXXXXXXXX)"
+    local errcode="" destpath destpathg
+    git clone "$@" >"$tempfile" 2>&1 || \
+        errcode="$?"
+    cat "$tempfile"
+    destpathg="$(grep -m 1 -E "$(printf 'fatal: destination path .* ';
+                                 printf 'already exists and is not an ';
+                                 printf 'empty directory.')"
+                      "$tempfile")";
+    destpath="$(echo "$destpathg" |
+                perl -pe "$(printf 's/fatal: destination path ';
+                            printf "'(.*)' ";
+                            printf 'already exists and is not an empty ';
+                            printf 'directory\./$1/\n')")";
+    if [ -d "$destpath" ]; then
+        echo "BASH: cd $(destpath)"
+        echo "BASH: git pull"
+        (cd "$destpath"
+         git pull)
+    fi
+    rm "$tempfile"
+    if [ "$errcode" ]; then
+        exit "$errcode"
+    fi
+}
+
 if [ $# -eq 0 -o "$1" = '--help' ]; then
     echo "GCL: the \`git clone\` that doesn't suck"
     echo
@@ -18,7 +45,7 @@ fi
 if [ 1 -eq $(echo "$1" | grep -c -E -m 1 "^(http(s)?|git|ssh)://*") ]; then
     local repo="$(echo "$1" | perl -pe 's/(\.git)?$/.git/')"
     shift
-    git clone "$repo" "$@" || exit $?
+    clone "$repo" "$@"
 elif [ 1 -eq $(echo "$1" | grep -c -E -m 1 "^[^:]+:.+") ]; then
     local nnnn="$(echo "$1" | perl -pe 's/([^:]+:).+/$1/')"
     local nn="$(cat "$HOME/.config/git-providers" | wc -l)"
@@ -29,8 +56,7 @@ elif [ 1 -eq $(echo "$1" | grep -c -E -m 1 "^[^:]+:.+") ]; then
         if [ 1 -eq $(echo "$hi" | grep -c -E -m 1 "^$nnnn") ]; then
             xD="$(echo "$1" | perl -pe 's/[^:]+:(.+)/$1/')"
             shift
-            git clone "$(echo "$hi" | perl -pe 's/[^:]+:(.+)/$1/')$xD"\
-                "$@" || exit $?
+            clone "$(echo "$hi" | perl -pe 's/[^:]+:(.+)/$1/')$xD" "$@"
             exit 0
         fi
     done
@@ -40,5 +66,5 @@ else
     local repo="$1"
     local prefix="$(head -n 1 "$HOME/.config/git-providers")"
     shift
-    git clone "$prefix$repo" "$@" || exit $?
+    clone "$prefix$repo" "$@"
 fi
