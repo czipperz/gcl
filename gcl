@@ -1,29 +1,7 @@
 #!/bin/bash
 clone() {
-    local tempfile="$(mktemp gcl.XXXXXXXXXX)"
-    local errcode="" destpath destpathg
-    git clone "$@" >"$tempfile" 2>&1 || \
-        errcode="$?"
-    cat "$tempfile"
-    destpathg="$(grep -m 1 -E "$(printf 'fatal: destination path .* ';
-                                 printf 'already exists and is not an ';
-                                 printf 'empty directory.')"
-                      "$tempfile")";
-    destpath="$(echo "$destpathg" |
-                perl -pe "$(printf 's/fatal: destination path ';
-                            printf "'(.*)' ";
-                            printf 'already exists and is not an empty ';
-                            printf 'directory\./$1/\n')")";
-    if [ -d "$destpath" ]; then
-        echo "BASH: cd $(destpath)"
-        echo "BASH: git pull"
-        (cd "$destpath"
-         git pull)
-    fi
-    rm "$tempfile"
-    if [ "$errcode" ]; then
-        exit "$errcode"
-    fi
+    echo "git clone $@"
+    git clone "$@" || exit -1
 }
 
 main() {
