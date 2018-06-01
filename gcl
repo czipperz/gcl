@@ -22,26 +22,22 @@ main() {
     fi
 
     if [ 1 -eq $(echo "$1" | grep -c -E -m 1 "^(http(s)?|git|ssh)://.*") ]; then
+        # raw address
         local repo="$(echo "$1" | perl -pe 's/(\.git)?$/.git/')"
         shift
         clone "$repo" "$@"
     elif [ 1 -eq $(echo "$1" | grep -c -E -m 1 "^[^:]+:.+") ]; then
+        # provider:repository
         local provider="$(echo "$1" | perl -pe 's/([^:]+:).+/$1/')"
-        local lineCount="$(cat "$HOME/.config/git-providers" | wc -l)"
-        local line
-        local url
-        # for line in git-providers that isn't first
-        for (( i=2; i <= $lineCount; i++ )); do
-            line="$(head -n $i "$HOME/.config/git-providers" | tail -n 1)"
-            if [ 1 -eq $(echo "$line" | grep -c -E -m 1 "^$provider") ]; then
-                url="$(echo "$1" | perl -pe 's/[^:]+:(.+)/$1/')"
-                shift
-                clone "$(echo "$url" | perl -pe 's/[^:]+:(.+)/$1/')$url" "$@"
-                exit 0
-            fi
-        done
-        echo "Couldn't find provider $(echo "$provider" | perl -pe 's/:$//')"
-        exit 1
+        local repo="$(echo "$1" | perl -pe 's/^[^:]+:(.+)/$1/')"
+        local line="$(grep "^$provider" "$HOME/.config/git-providers")"
+        if [ -z "$line" ]; then
+            echo "Couldn't find provider $(echo "$provider" | perl -pe 's/:$//')"
+            exit 1
+        fi
+        local url="$(echo "$line" | perl -pe 's/[^:]+:(.+)/$1/')"
+        shift
+        clone "$url$repo" "$@"
     else
         local repo="$1"
         local prefix="$(head -n 1 "$HOME/.config/git-providers")"
